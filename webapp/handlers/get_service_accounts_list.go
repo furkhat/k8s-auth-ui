@@ -17,7 +17,6 @@ var dir, _ = os.Getwd()
 var templatesDir = filepath.Join(dir, "webapp", "templates")
 var tmpl = template.Must(
 	template.ParseFiles(
-		filepath.Join(templatesDir, "index.html"),
 		filepath.Join(templatesDir, "serviceaccounts_list.html"),
 	),
 )
