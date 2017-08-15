@@ -1,6 +1,6 @@
-{{ define "title" }}Service Accounts {{end}}
+{{ define "title" }}Roles{{end}}
 {{ define "content"}}
-    <h2>Service accounts</h2>
+    <h2>Roles</h2>
     {{if not .}}
         No resources found.
     {{else}}
@@ -8,7 +8,6 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Secrets</th>
                 <th>Created at</th>
             </tr>
         </thead>
@@ -16,7 +15,6 @@
         {{range .}}
             <tr>
                 <td>{{.Name}}</td>
-                <td>{{len .Secrets}}</td>
                 <td>{{.CreationTimestamp}}</td>
             </tr>
         {{end}}

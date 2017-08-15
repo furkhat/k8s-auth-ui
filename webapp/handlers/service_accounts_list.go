@@ -20,12 +20,12 @@ func NewServiceAccountsListHandler(tmpl *template.Template, client *k8s_client.S
 	}
 }
 
-func (h *ServiceAccountsListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	serviceAccounts, err := h.serviceAccountsClient.GetList()
+func (handler *ServiceAccountsListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	serviceAccounts, err := handler.serviceAccountsClient.GetList()
 	if err != nil {
 		log.Fatal(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	renderTemplate(w, h.tmpl, serviceAccounts)
+	renderTemplate(w, handler.tmpl, serviceAccounts)
 }
