@@ -7,6 +7,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
+	"bufio"
 )
 
 var kubeConfig = os.Getenv("HOME") + "/.kube/config"
@@ -37,6 +38,7 @@ func main() {
 		panic(err)
 	}
 	fmt.Println("Created service account ", result.Name)
+	prompt()
 
 	fmt.Println("List serviceaccounts...")
 	list, err := serviceAccountsClient.List(metav1.ListOptions{})
@@ -46,6 +48,7 @@ func main() {
 	for _, d := range list.Items {
 		fmt.Println(" - ", d.Name)
 	}
+	prompt()
 
 	fmt.Println("Deleting serviceaccount...")
 	deletePolicy := metav1.DeletePropagationForeground
@@ -55,4 +58,16 @@ func main() {
 		panic(err)
 	}
 	fmt.Println("Deleted serviceaccount.")
+}
+
+func prompt() {
+	fmt.Printf("-> Press Return key to continue.")
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		break
+	}
+	if err := scanner.Err(); err != nil {
+		panic(err)
+	}
+	fmt.Println()
 }
