@@ -1,14 +1,12 @@
 package handlers
 
 import (
+	"html/template"
 	"log"
 	"net/http"
-
-	webAppConfig "github.com/furkhat/k8s-users/webapp/config"
 )
 
-func renderTemplate(w http.ResponseWriter, name string, data interface{}) {
-	tmpl := webAppConfig.Templates[name]
+func renderTemplate(w http.ResponseWriter, tmpl *template.Template, data interface{}) {
 	err := tmpl.Execute(w, data)
 	if err != nil {
 		log.Fatal(err)

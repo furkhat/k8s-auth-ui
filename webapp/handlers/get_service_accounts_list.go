@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -12,7 +13,11 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-func GetListServiceAccountsPage(w http.ResponseWriter, r *http.Request) {
+type GetServiceAccountsListHandler struct {
+	Template *template.Template
+}
+
+func (h *GetServiceAccountsListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	kubeConfigPath := filepath.Join(os.Getenv("HOME"), "/.kube/config")
 	config, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
 	if err != nil {
@@ -36,5 +41,5 @@ func GetListServiceAccountsPage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	renderTemplate(w, "serviceaccounts_list", serviceAccounts.Items)
+	renderTemplate(w, h.Template, serviceAccounts.Items)
 }
