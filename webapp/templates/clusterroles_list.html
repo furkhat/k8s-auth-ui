@@ -1,0 +1,24 @@
+{{ define "title" }}ClusterRoles{{end}}
+{{ define "content"}}
+    <h2>ClusterRoles</h2>
+    {{if not .}}
+        No resources found.
+    {{else}}
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Created at</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{range .}}
+            <tr>
+                <td>{{.Name}}</td>
+                <td>{{.CreationTimestamp}}</td>
+            </tr>
+        {{end}}
+        </tbody>
+    </table>
+    {{end}}
+{{end}}

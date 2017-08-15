@@ -32,6 +32,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	clusterRolesClient, err := k8s_client.NewClusterRolesClient(kubeConfigPath)
+	if err != nil {
+		panic(err)
+	}
 	serviceAccountListHandler := handlers.NewServiceAccountsListHandler(
 		template.Must(
 			template.ParseFiles(
@@ -66,6 +70,20 @@ func main() {
 	router.Handle(
 		"/roles",
 		rolesListHandler,
+	).Methods("GET")
+
+	clusterRolesListHandler := handlers.NewClusterRolesListHandler(
+		template.Must(
+			template.ParseFiles(
+				filepath.Join(templatesDir, "base.html"),
+				filepath.Join(templatesDir, "clusterroles_list.html"),
+			),
+		),
+		clusterRolesClient,
+	)
+	router.Handle(
+		"/clusterroles",
+		clusterRolesListHandler,
 	).Methods("GET")
 
 	http.ListenAndServe(":8080", router)
