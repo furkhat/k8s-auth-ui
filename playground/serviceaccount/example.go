@@ -8,9 +8,10 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
 	"bufio"
+	"path/filepath"
 )
 
-var kubeConfig = os.Getenv("HOME") + "/.kube/config"
+var kubeConfig = filepath.Join(os.Getenv("HOME"), "/.kube/config")
 var testServiceAccountName = "demo-serviceaccount"
 
 func main() {
