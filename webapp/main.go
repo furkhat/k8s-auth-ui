@@ -9,6 +9,7 @@ import (
 	"html/template"
 	"os"
 	"path/filepath"
+	"log"
 )
 
 func main() {
@@ -18,7 +19,11 @@ func main() {
 	}
 	templatesDir := filepath.Join(workingDir, "webapp", "templates")
 
-	kubeConfigPath := filepath.Join(os.Getenv("HOME"), "/.kube/config")
+	kubeConfigPath := os.Getenv("KUBE_CONFIG")
+	if kubeConfigPath == "" {
+		log.Fatal("KUBE_CONFIG evironment variable must be set")
+		return
+	}
 	serviceAccountsClient, err := k8s_client.NewServiceAccountsClient(kubeConfigPath)
 	if err != nil {
 		panic(err)
