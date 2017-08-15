@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -11,14 +10,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
-)
-
-var dir, _ = os.Getwd()
-var templatesDir = filepath.Join(dir, "webapp", "templates")
-var tmpl = template.Must(
-	template.ParseFiles(
-		filepath.Join(templatesDir, "serviceaccounts_list.html"),
-	),
 )
 
 func GetListServiceAccountsPage(w http.ResponseWriter, r *http.Request) {
