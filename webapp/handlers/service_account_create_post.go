@@ -5,11 +5,13 @@ import (
 	"html/template"
 	"net/http"
 	"log"
+	"regexp"
 )
 
 type ServiceAccountCreatePostHandler struct {
 	tmpl                  *template.Template
 	serviceAccountsClient *k8s_client.ServiceAccountsClient
+	nameRegex *regexp.Regexp
 	handlerInterface
 }
 
@@ -19,11 +21,19 @@ type serviceAccountCreatePostHandlerResponse struct {
 }
 
 func NewServiceAccountCreatePostHandler(tmpl *template.Template, client *k8s_client.ServiceAccountsClient) *ServiceAccountCreatePostHandler {
-	return &ServiceAccountCreatePostHandler{tmpl, client, &handler{}}
+	nameRegex := regexp.MustCompile("^[a-z][a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*?[a-z]")
+	return &ServiceAccountCreatePostHandler{tmpl, client, nameRegex, &handler{}}
 }
 
 func (handler *ServiceAccountCreatePostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("name")
+	m := handler.nameRegex.Match([]byte(name))
+	if !m {
+		log.Println("Invalid name", name)
+		http.Error(w, "Invalid name", http.StatusBadRequest)
+		return
+	}
+	log.Println(m)
 	if _, err := handler.serviceAccountsClient.Create(name); err != nil {
 		log.Fatal(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
