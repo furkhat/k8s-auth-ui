@@ -3,37 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ template "title" .}}</title>
-    <style>
-        table {
-            color: #333; /* Lighten up font color */
-            font-family: Helvetica, Arial, sans-serif; /* Nicer font */
-            width: 640px;
-            border-collapse:
-                    collapse; border-spacing: 0;
-        }
-
-        td, th { border: 1px solid #CCC; height: 30px; } /* Make cells a bit taller */
-
-        th {
-            background: #F3F3F3; /* Light grey background */
-            font-weight: bold; /* Make sure they're bold */
-        }
-
-        td {
-            background: #FAFAFA; /* Lighter grey background */
-            text-align: center; /* Center our text */
-        }
-    </style>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+          crossorigin="anonymous">
 </head>
 <body>
-    <div>
-        <a href="/serviceaccounts">Service Accounts</a><br>
-        <a href="/roles">Roles</a><br>
-        <a href="/clusterroles">ClusterRoles</a>
-    </div>
-
-    <div>
-        {{ template "content" . }}
+    <div class="container">
+        <div class="content">
+            <div>
+                <a href="/serviceaccounts" class="btn btn-default">Service Accounts</a><br>
+                <a href="/roles" class="btn btn-default">Roles</a><br>
+                <a href="/clusterroles" class="btn btn-default">ClusterRoles</a><br>
+            </div>
+            {{ template "content" . }}
+        </div>
     </div>
 </body>
 </html>
