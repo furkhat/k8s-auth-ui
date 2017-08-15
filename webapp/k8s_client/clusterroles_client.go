@@ -1,8 +1,8 @@
 package k8s_client
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/api/rbac/v1beta1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -10,13 +10,8 @@ type ClusterRolesClient struct {
 	clientset *kubernetes.Clientset
 }
 
-func NewClusterRolesClient(kubeConfigPath string) (*ClusterRolesClient, error) {
-	clientset, err := makeClientSet(kubeConfigPath)
-	if err != nil {
-		return nil, err
-	}
-
-	return &ClusterRolesClient{clientset: clientset}, nil
+func NewClusterRolesClient(clientset *kubernetes.Clientset) *ClusterRolesClient {
+	return &ClusterRolesClient{clientset: clientset}
 }
 
 func (client *ClusterRolesClient) GetList() ([]v1beta1.ClusterRole, error) {

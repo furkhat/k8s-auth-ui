@@ -10,13 +10,8 @@ type ServiceAccountsClient struct {
 	clientset *kubernetes.Clientset
 }
 
-func NewServiceAccountsClient(kubeConfigPath string) (*ServiceAccountsClient, error) {
-	clientset, err := makeClientSet(kubeConfigPath)
-	if err != nil {
-		return nil, err
-	}
-
-	return &ServiceAccountsClient{clientset: clientset}, nil
+func NewServiceAccountsClient(clientset *kubernetes.Clientset) *ServiceAccountsClient {
+	return &ServiceAccountsClient{clientset: clientset}
 }
 
 func (client *ServiceAccountsClient) GetList() ([]apiv1.ServiceAccount, error) {

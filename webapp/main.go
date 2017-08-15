@@ -7,10 +7,20 @@ import (
 	"github.com/furkhat/k8s-users/webapp/k8s_client"
 	"github.com/gorilla/mux"
 	"html/template"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/clientcmd"
+	"log"
 	"os"
 	"path/filepath"
-	"log"
 )
+
+func makeClientSet(kubeConfigPath string) (*kubernetes.Clientset, error) {
+	config, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
+	if err != nil {
+		return nil, err
+	}
+	return kubernetes.NewForConfig(config)
+}
 
 func main() {
 	workingDir, err := os.Getwd()
@@ -24,18 +34,15 @@ func main() {
 		log.Fatal("KUBE_CONFIG evironment variable must be set")
 		return
 	}
-	serviceAccountsClient, err := k8s_client.NewServiceAccountsClient(kubeConfigPath)
+
+	clientset, err := makeClientSet(kubeConfigPath)
 	if err != nil {
 		panic(err)
 	}
-	rolesClient, err := k8s_client.NewRolesClient(kubeConfigPath)
-	if err != nil {
-		panic(err)
-	}
-	clusterRolesClient, err := k8s_client.NewClusterRolesClient(kubeConfigPath)
-	if err != nil {
-		panic(err)
-	}
+
+	serviceAccountsClient := k8s_client.NewServiceAccountsClient(clientset)
+	rolesClient := k8s_client.NewRolesClient(clientset)
+	clusterRolesClient := k8s_client.NewClusterRolesClient(clientset)
 	serviceAccountListHandler := handlers.NewServiceAccountsListHandler(
 		template.Must(
 			template.ParseFiles(
