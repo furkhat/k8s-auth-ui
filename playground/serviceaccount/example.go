@@ -1,18 +1,18 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
-	"bufio"
 	"path/filepath"
 )
 
 var kubeConfig = filepath.Join(os.Getenv("HOME"), "/.kube/config")
-var testServiceAccountName = "demo-serviceaccount"
+const testServiceAccountName = "demo-serviceaccount"
 
 func main() {
 	config, err := clientcmd.BuildConfigFromFlags("", kubeConfig)
