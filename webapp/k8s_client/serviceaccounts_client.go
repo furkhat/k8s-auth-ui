@@ -20,7 +20,7 @@ func NewServiceAccountsClient(kubeConfigPath string) (*ServiceAccountsClient, er
 }
 
 func (client *ServiceAccountsClient) GetList() ([]apiv1.ServiceAccount, error) {
-	serviceAccountsClient := client.clientset.CoreV1().ServiceAccounts(apiv1.NamespaceDefault)
+	serviceAccountsClient := client.clientset.CoreV1().ServiceAccounts("")
 
 	serviceAccountsList, err := serviceAccountsClient.List(metav1.ListOptions{})
 
