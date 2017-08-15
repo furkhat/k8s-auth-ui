@@ -20,6 +20,7 @@ func main() {
 	getServiceAccountListHandler := &handlers.GetServiceAccountsListHandler{
 		Template: template.Must(
 			template.ParseFiles(
+				filepath.Join(templatesDir, "base.html"),
 				filepath.Join(templatesDir, "serviceaccounts_list.html"),
 			),
 		),

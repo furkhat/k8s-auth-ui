@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ template "title" .}}</title>
+</head>
+<body>
+    <div>
+        <a href="/serviceaccounts">Service Accounts</a><br>
+        <a href="/roles">Roles</a><br>
+        <a href="/clusterroles">ClusterRoles</a>
+    </div>
+
+    <div>
+        {{ template "content" . }}
+    </div>
+</body>
+</html>
