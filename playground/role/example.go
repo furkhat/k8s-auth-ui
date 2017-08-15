@@ -46,7 +46,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("Role created. Name %s, Rules %s\n", result.Name, result.Rules)
+	fmt.Printf("Role created. Name %s, Rules %s\n", result.Name, result.Rules[0])
 	prompt()
 
 	fmt.Println("List Roles...")
@@ -59,7 +59,7 @@ func main() {
 	}
 	prompt()
 
-	fmt.Println("Deleting Roles...")
+	fmt.Printf("Deleting %s...\n", testRoleName)
 	deletePolicy := metav1.DeletePropagationForeground
 	if err := rolesClient.Delete(testRoleName, &metav1.DeleteOptions{
 		PropagationPolicy: &deletePolicy,
