@@ -59,10 +59,23 @@ func main() {
 		"/",
 		serviceAccountListHandler,
 	).Methods("GET")
-
 	router.Handle(
 		"/serviceaccounts",
 		serviceAccountListHandler,
+	).Methods("GET")
+
+	serviceAccountCreateGetHandler := handlers.NewServiceAccountsCreateGetHandler(
+		template.Must(
+			template.ParseFiles(
+				filepath.Join(templatesDir, "base.html"),
+				filepath.Join(templatesDir, "serviceaccounts_create.html"),
+			),
+		),
+	)
+
+	router.Handle(
+		"/serviceaccounts/create",
+		serviceAccountCreateGetHandler,
 	).Methods("GET")
 
 	rolesListHandler := handlers.NewRolesListHandler(
