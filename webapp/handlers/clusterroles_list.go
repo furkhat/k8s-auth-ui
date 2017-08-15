@@ -3,17 +3,18 @@ package handlers
 import (
 	"github.com/furkhat/k8s-users/webapp/k8s_client"
 	"html/template"
-	"net/http"
 	"log"
+	"net/http"
 )
 
 type ClusterRolesListHandler struct {
-	tmpl        *template.Template
+	tmpl               *template.Template
 	clusterRolesClient *k8s_client.ClusterRolesClient
+	handlerInterface
 }
 
 func NewClusterRolesListHandler(tmpl *template.Template, client *k8s_client.ClusterRolesClient) *ClusterRolesListHandler {
-	return &ClusterRolesListHandler{tmpl: tmpl, clusterRolesClient: client}
+	return &ClusterRolesListHandler{tmpl, client, &handler{}}
 }
 
 func (handler ClusterRolesListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -23,5 +24,5 @@ func (handler ClusterRolesListHandler) ServeHTTP(w http.ResponseWriter, r *http.
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	renderTemplate(w, handler.tmpl, roles)
+	handler.render(w, handler.tmpl, roles)
 }

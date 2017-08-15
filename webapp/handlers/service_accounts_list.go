@@ -11,13 +11,11 @@ import (
 type ServiceAccountsListHandler struct {
 	tmpl                  *template.Template
 	serviceAccountsClient *k8s_client.ServiceAccountsClient
+	handlerInterface
 }
 
 func NewServiceAccountsListHandler(tmpl *template.Template, client *k8s_client.ServiceAccountsClient) *ServiceAccountsListHandler {
-	return &ServiceAccountsListHandler{
-		tmpl: tmpl,
-		serviceAccountsClient: client,
-	}
+	return &ServiceAccountsListHandler{tmpl, client, &handler{}}
 }
 
 func (handler *ServiceAccountsListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -27,5 +25,5 @@ func (handler *ServiceAccountsListHandler) ServeHTTP(w http.ResponseWriter, r *h
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	renderTemplate(w, handler.tmpl, serviceAccounts)
+	handler.render(w, handler.tmpl, serviceAccounts)
 }
