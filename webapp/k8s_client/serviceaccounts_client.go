@@ -25,3 +25,12 @@ func (client *ServiceAccountsClient) GetList() ([]apiv1.ServiceAccount, error) {
 
 	return serviceAccountsList.Items, nil
 }
+
+func (client *ServiceAccountsClient) Create(name string) (*apiv1.ServiceAccount, error) {
+	serviceAccount := &apiv1.ServiceAccount{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: name,
+		},
+	}
+	return client.clientset.CoreV1().ServiceAccounts(apiv1.NamespaceDefault).Create(serviceAccount)
+}
