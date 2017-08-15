@@ -23,10 +23,6 @@ var tmpl = template.Must(
 	),
 )
 
-func getIndexPage(w http.ResponseWriter, _ *http.Request) {
-	renderTemplate(w, "index", nil)
-}
-
 func getListServiceAccountsPage(w http.ResponseWriter, r *http.Request) {
 	kubeConfigPath := filepath.Join(os.Getenv("HOME"), "/.kube/config")
 	config, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
@@ -64,7 +60,7 @@ func renderTemplate(w http.ResponseWriter, name string, data interface{}) {
 
 func main() {
 	router := mux.NewRouter()
-	router.HandleFunc("/", getIndexPage).Methods("GET")
+	router.HandleFunc("/", getListServiceAccountsPage).Methods("GET")
 	router.HandleFunc("/serviceaccounts", getListServiceAccountsPage).Methods("GET")
 	http.ListenAndServe(":8080", router)
 }
