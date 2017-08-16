@@ -10,7 +10,7 @@ import (
 
 type ServiceAccountCreateGetHandler struct {
 	tmpl             *template.Template
-	namespacesClient *k8s_client.NamespacesClient
+	namespacesClient k8s_client.NamespacesClientInterface
 	handlerInterface
 }
 
@@ -19,7 +19,7 @@ type serviceAccountCreateGetResponseData struct {
 	Success    bool
 }
 
-func NewServiceAccountCreateGetHandler(tmpl *template.Template, client *k8s_client.NamespacesClient) *ServiceAccountCreateGetHandler {
+func NewServiceAccountCreateGetHandler(tmpl *template.Template, client k8s_client.NamespacesClientInterface) *ServiceAccountCreateGetHandler {
 	return &ServiceAccountCreateGetHandler{tmpl, client, &handler{}}
 }
 

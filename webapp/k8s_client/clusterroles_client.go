@@ -10,7 +10,11 @@ type ClusterRolesClient struct {
 	clientset *kubernetes.Clientset
 }
 
-func NewClusterRolesClient(clientset *kubernetes.Clientset) *ClusterRolesClient {
+type ClusterRolesClientInterface interface {
+	GetList() ([]v1beta1.ClusterRole, error)
+}
+
+func NewClusterRolesClient(clientset *kubernetes.Clientset) ClusterRolesClientInterface {
 	return &ClusterRolesClient{clientset: clientset}
 }
 

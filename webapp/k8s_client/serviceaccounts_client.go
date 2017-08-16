@@ -12,7 +12,12 @@ type ServiceAccountsClient struct {
 	clientset *kubernetes.Clientset
 }
 
-func NewServiceAccountsClient(clientset *kubernetes.Clientset) *ServiceAccountsClient {
+type ServiceAccountsClientInterface interface {
+	GetList() ([]apiv1.ServiceAccount, error)
+	Create(spec *CreateServiceAccountSpec) (*apiv1.ServiceAccount, error)
+}
+
+func NewServiceAccountsClient(clientset *kubernetes.Clientset) ServiceAccountsClientInterface {
 	return &ServiceAccountsClient{clientset: clientset}
 }
 

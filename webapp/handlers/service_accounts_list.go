@@ -10,11 +10,11 @@ import (
 
 type ServiceAccountsListHandler struct {
 	tmpl                  *template.Template
-	serviceAccountsClient *k8s_client.ServiceAccountsClient
+	serviceAccountsClient k8s_client.ServiceAccountsClientInterface
 	handlerInterface
 }
 
-func NewServiceAccountsListHandler(tmpl *template.Template, client *k8s_client.ServiceAccountsClient) *ServiceAccountsListHandler {
+func NewServiceAccountsListHandler(tmpl *template.Template, client k8s_client.ServiceAccountsClientInterface) *ServiceAccountsListHandler {
 	return &ServiceAccountsListHandler{tmpl, client, &handler{}}
 }
 

@@ -10,7 +10,11 @@ type NamespacesClient struct {
 	clientset *kubernetes.Clientset
 }
 
-func NewNamespacesClient(clientset *kubernetes.Clientset) *NamespacesClient {
+type NamespacesClientInterface interface {
+	GetList() ([]apiv1.Namespace, error)
+}
+
+func NewNamespacesClient(clientset *kubernetes.Clientset) NamespacesClientInterface {
 	return &NamespacesClient{clientset: clientset}
 }
 

@@ -10,7 +10,11 @@ type RolesClient struct {
 	clientset *kubernetes.Clientset
 }
 
-func NewRolesClient(clientset *kubernetes.Clientset) *RolesClient {
+type RolesClientInterface interface {
+	GetList() ([]v1beta1.Role, error)
+}
+
+func NewRolesClient(clientset *kubernetes.Clientset) RolesClientInterface {
 	return &RolesClient{clientset: clientset}
 }
 

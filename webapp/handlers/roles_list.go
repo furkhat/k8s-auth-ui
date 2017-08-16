@@ -9,11 +9,11 @@ import (
 
 type RolesListHandler struct {
 	tmpl        *template.Template
-	rolesClient *k8s_client.RolesClient
+	rolesClient k8s_client.RolesClientInterface
 	handlerInterface
 }
 
-func NewRolesListHandler(tmpl *template.Template, client *k8s_client.RolesClient) *RolesListHandler {
+func NewRolesListHandler(tmpl *template.Template, client k8s_client.RolesClientInterface) *RolesListHandler {
 	return &RolesListHandler{tmpl, client, &handler{}}
 }
 

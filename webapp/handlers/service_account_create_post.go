@@ -10,7 +10,7 @@ import (
 
 type ServiceAccountCreatePostHandler struct {
 	tmpl                  *template.Template
-	serviceAccountsClient *k8s_client.ServiceAccountsClient
+	serviceAccountsClient k8s_client.ServiceAccountsClientInterface
 	handlerInterface
 }
 
@@ -19,7 +19,7 @@ type serviceAccountCreatePostResponseData struct {
 	Name    string
 }
 
-func NewServiceAccountCreatePostHandler(tmpl *template.Template, client *k8s_client.ServiceAccountsClient) *ServiceAccountCreatePostHandler {
+func NewServiceAccountCreatePostHandler(tmpl *template.Template, client k8s_client.ServiceAccountsClientInterface) *ServiceAccountCreatePostHandler {
 	return &ServiceAccountCreatePostHandler{tmpl, client, &handler{}}
 }
 
