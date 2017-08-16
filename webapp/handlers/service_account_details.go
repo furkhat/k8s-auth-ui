@@ -7,6 +7,7 @@ import (
 	"github.com/furkhat/k8s-users/webapp/k8s_client"
 	"github.com/gorilla/mux"
 	apiv1 "k8s.io/api/core/v1"
+	"k8s.io/api/rbac/v1beta1"
 	"log"
 )
 
@@ -19,6 +20,7 @@ type ServiceAccountDetailsHandler struct {
 
 type serviceAccountDetailsResponse struct {
 	ServiceAccount *apiv1.ServiceAccount
+	RoleBindings   []v1beta1.RoleBinding
 }
 
 func NewServiceAccountDetailsHandler(
@@ -39,5 +41,11 @@ func (handler *ServiceAccountDetailsHandler) ServeHTTP(w http.ResponseWriter, r 
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-	handler.render(w, handler.tmpl, &serviceAccountDetailsResponse{serviceaccount})
+	rolebindings, err := handler.roleBindingsClient.GetServiceAccountRoleBindingsList(name)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	handler.render(w, handler.tmpl, &serviceAccountDetailsResponse{serviceaccount, rolebindings})
 }
