@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/furkhat/k8s-users/webapp/k8s_client"
+	"github.com/furkhat/k8s-users/webapp/k8s_clients"
 	"github.com/gorilla/mux"
 	apiv1 "k8s.io/api/core/v1"
 	"k8s.io/api/rbac/v1beta1"
@@ -13,8 +13,8 @@ import (
 
 type ServiceAccountDetailsHandler struct {
 	tmpl                  *template.Template
-	roleBindingsClient    k8s_client.RoleBindingsClientInterface
-	serviceAccountsClient k8s_client.ServiceAccountsClientInterface
+	roleBindingsClient    k8s_clients.RoleBindingsClientInterface
+	serviceAccountsClient k8s_clients.ServiceAccountsClientInterface
 	handlerInterface
 }
 
@@ -25,8 +25,8 @@ type serviceAccountDetailsResponse struct {
 
 func NewServiceAccountDetailsHandler(
 	tmpl *template.Template,
-	rolebindingClient k8s_client.RoleBindingsClientInterface,
-	serviceaccountsClient k8s_client.ServiceAccountsClientInterface,
+	rolebindingClient k8s_clients.RoleBindingsClientInterface,
+	serviceaccountsClient k8s_clients.ServiceAccountsClientInterface,
 ) *ServiceAccountDetailsHandler {
 	return &ServiceAccountDetailsHandler{tmpl, rolebindingClient, serviceaccountsClient, &handler{}}
 }

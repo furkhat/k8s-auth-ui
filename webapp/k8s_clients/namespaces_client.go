@@ -1,4 +1,4 @@
-package k8s_client
+package k8s_clients
 
 import (
 	apiv1 "k8s.io/api/core/v1"

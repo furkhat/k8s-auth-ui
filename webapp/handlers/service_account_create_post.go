@@ -5,12 +5,12 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/furkhat/k8s-users/webapp/k8s_client"
+	"github.com/furkhat/k8s-users/webapp/k8s_clients"
 )
 
 type ServiceAccountCreatePostHandler struct {
 	tmpl                  *template.Template
-	serviceAccountsClient k8s_client.ServiceAccountsClientInterface
+	serviceAccountsClient k8s_clients.ServiceAccountsClientInterface
 	handlerInterface
 }
 
@@ -19,14 +19,14 @@ type serviceAccountCreatePostResponseData struct {
 	Name    string
 }
 
-func NewServiceAccountCreatePostHandler(tmpl *template.Template, client k8s_client.ServiceAccountsClientInterface) *ServiceAccountCreatePostHandler {
+func NewServiceAccountCreatePostHandler(tmpl *template.Template, client k8s_clients.ServiceAccountsClientInterface) *ServiceAccountCreatePostHandler {
 	return &ServiceAccountCreatePostHandler{tmpl, client, &handler{}}
 }
 
 func (handler *ServiceAccountCreatePostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("name")
 	namespace := r.FormValue("namespace")
-	createSpec := &k8s_client.CreateServiceAccountSpec{Name: name, Namespace: namespace}
+	createSpec := &k8s_clients.CreateServiceAccountSpec{Name: name, Namespace: namespace}
 	if _, err := handler.serviceAccountsClient.Create(createSpec); err != nil {
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusConflict)

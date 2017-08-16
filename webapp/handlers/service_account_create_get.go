@@ -4,13 +4,13 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/furkhat/k8s-users/webapp/k8s_client"
+	"github.com/furkhat/k8s-users/webapp/k8s_clients"
 	apiv1 "k8s.io/api/core/v1"
 )
 
 type ServiceAccountCreateGetHandler struct {
 	tmpl             *template.Template
-	namespacesClient k8s_client.NamespacesClientInterface
+	namespacesClient k8s_clients.NamespacesClientInterface
 	handlerInterface
 }
 
@@ -19,7 +19,7 @@ type serviceAccountCreateGetResponseData struct {
 	Success    bool
 }
 
-func NewServiceAccountCreateGetHandler(tmpl *template.Template, client k8s_client.NamespacesClientInterface) *ServiceAccountCreateGetHandler {
+func NewServiceAccountCreateGetHandler(tmpl *template.Template, client k8s_clients.NamespacesClientInterface) *ServiceAccountCreateGetHandler {
 	return &ServiceAccountCreateGetHandler{tmpl, client, &handler{}}
 }
 

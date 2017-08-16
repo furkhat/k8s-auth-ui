@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/furkhat/k8s-users/webapp/k8s_client"
+	"github.com/furkhat/k8s-users/webapp/k8s_clients"
 	"html/template"
 	"log"
 	"net/http"
@@ -9,11 +9,11 @@ import (
 
 type RolesListHandler struct {
 	tmpl        *template.Template
-	rolesClient k8s_client.RolesClientInterface
+	rolesClient k8s_clients.RolesClientInterface
 	handlerInterface
 }
 
-func NewRolesListHandler(tmpl *template.Template, client k8s_client.RolesClientInterface) *RolesListHandler {
+func NewRolesListHandler(tmpl *template.Template, client k8s_clients.RolesClientInterface) *RolesListHandler {
 	return &RolesListHandler{tmpl, client, &handler{}}
 }
 
