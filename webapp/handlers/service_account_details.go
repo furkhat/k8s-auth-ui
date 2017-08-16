@@ -1,0 +1,43 @@
+package handlers
+
+import (
+	"html/template"
+	"net/http"
+
+	"github.com/furkhat/k8s-users/webapp/k8s_client"
+	"github.com/gorilla/mux"
+	apiv1 "k8s.io/api/core/v1"
+	"log"
+)
+
+type ServiceAccountDetailsHandler struct {
+	tmpl                  *template.Template
+	roleBindingsClient    k8s_client.RoleBindingsClientInterface
+	serviceAccountsClient k8s_client.ServiceAccountsClientInterface
+	handlerInterface
+}
+
+type serviceAccountDetailsResponse struct {
+	ServiceAccount *apiv1.ServiceAccount
+}
+
+func NewServiceAccountDetailsHandler(
+	tmpl *template.Template,
+	rolebindingClient k8s_client.RoleBindingsClientInterface,
+	serviceaccountsClient k8s_client.ServiceAccountsClientInterface,
+) *ServiceAccountDetailsHandler {
+	return &ServiceAccountDetailsHandler{tmpl, rolebindingClient, serviceaccountsClient, &handler{}}
+}
+
+func (handler *ServiceAccountDetailsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	name := vars["name"]
+	namespace := vars["namespace"]
+	serviceaccount, err := handler.serviceAccountsClient.Get(namespace, name)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	handler.render(w, handler.tmpl, &serviceAccountDetailsResponse{serviceaccount})
+}

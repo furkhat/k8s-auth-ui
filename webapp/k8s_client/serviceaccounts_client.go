@@ -15,6 +15,7 @@ type ServiceAccountsClient struct {
 type ServiceAccountsClientInterface interface {
 	GetList() ([]apiv1.ServiceAccount, error)
 	Create(spec *CreateServiceAccountSpec) (*apiv1.ServiceAccount, error)
+	Get(namespace string, name string) (*apiv1.ServiceAccount, error)
 }
 
 func NewServiceAccountsClient(clientset *kubernetes.Clientset) ServiceAccountsClientInterface {
@@ -56,4 +57,8 @@ func (client *ServiceAccountsClient) Create(spec *CreateServiceAccountSpec) (*ap
 		},
 	}
 	return client.clientset.CoreV1().ServiceAccounts(spec.Namespace).Create(serviceAccount)
+}
+
+func (client *ServiceAccountsClient) Get(namespace string, name string) (*apiv1.ServiceAccount, error) {
+	return client.clientset.CoreV1().ServiceAccounts(namespace).Get(name, metav1.GetOptions{})
 }

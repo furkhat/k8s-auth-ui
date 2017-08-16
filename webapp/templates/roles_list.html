@@ -7,16 +7,16 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Namespace</th>
                 <th>Name</th>
+                <th>Namespace</th>
                 <th>Created at</th>
             </tr>
         </thead>
         <tbody>
         {{range .}}
             <tr>
-                <td>{{.Namespace}}</td>
                 <td>{{.Name}}</td>
+                <td>{{.Namespace}}</td>
                 <td>{{.CreationTimestamp}}</td>
             </tr>
         {{end}}
