@@ -46,8 +46,9 @@ Give permissions to the default service account used by application
 ```
 kubectl create clusterrolebinding demo-clusterrolebinding --clusterrole=cluster-admin --serviceaccount=default:default
 ```
-Clone this repo and build the app image
+Clone the repo, and build the app image using the same Docker host as the Minikube VM
 ```
+eval $(minikube docker-env)
 docker build -t in-cluster:v1 .
 ```
 Run application
