@@ -7,7 +7,7 @@ import (
 
 	"github.com/furkhat/k8s-users/webapp/k8s_clients"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
+  "k8s.io/client-go/rest"
 )
 
 type Application struct {
@@ -20,7 +20,7 @@ type Application struct {
 }
 
 func NewApplication(appConfig *ApplicationConfig) *Application {
-	config, err := clientcmd.BuildConfigFromFlags("", appConfig.KubeConfigPath)
+	config, err := rest.InClusterConfig()
 	if err != nil {
 		log.Panic(err)
 	}
