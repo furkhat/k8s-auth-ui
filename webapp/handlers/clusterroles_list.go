@@ -20,7 +20,7 @@ func NewClusterRolesListHandler(tmpl *template.Template, client *k8s_client.Clus
 func (handler ClusterRolesListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	roles, err := handler.clusterRolesClient.GetList()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

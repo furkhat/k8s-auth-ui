@@ -25,19 +25,18 @@ func makeClientSet(kubeConfigPath string) (*kubernetes.Clientset, error) {
 func main() {
 	workingDir, err := os.Getwd()
 	if err != nil {
-		panic(err)
+		log.Panic(err.Error())
 	}
 	templatesDir := filepath.Join(workingDir, "webapp", "templates")
 
 	kubeConfigPath := os.Getenv("KUBE_CONFIG")
 	if kubeConfigPath == "" {
 		log.Fatal("KUBE_CONFIG evironment variable must be set")
-		return
 	}
 
 	clientset, err := makeClientSet(kubeConfigPath)
 	if err != nil {
-		panic(err)
+		log.Panic(err.Error())
 	}
 
 	serviceAccountsClient := k8s_client.NewServiceAccountsClient(clientset)

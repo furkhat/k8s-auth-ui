@@ -21,7 +21,7 @@ func NewServiceAccountsListHandler(tmpl *template.Template, client *k8s_client.S
 func (handler *ServiceAccountsListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	serviceAccounts, err := handler.serviceAccountsClient.GetList()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

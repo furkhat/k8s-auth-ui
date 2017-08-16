@@ -20,7 +20,7 @@ func NewRolesListHandler(tmpl *template.Template, client *k8s_client.RolesClient
 func (handler RolesListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	roles, err := handler.rolesClient.GetList()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

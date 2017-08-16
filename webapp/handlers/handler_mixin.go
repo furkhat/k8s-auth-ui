@@ -16,7 +16,7 @@ type handler struct {
 func (h handler) render(w http.ResponseWriter, tmpl *template.Template, data interface{}) {
 	err := tmpl.Execute(w, data)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

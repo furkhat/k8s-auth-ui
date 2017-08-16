@@ -33,10 +33,9 @@ func (handler *ServiceAccountCreatePostHandler) ServeHTTP(w http.ResponseWriter,
 		http.Error(w, "Invalid name", http.StatusBadRequest)
 		return
 	}
-	log.Println(m)
 	if _, err := handler.serviceAccountsClient.Create(name); err != nil {
-		log.Fatal(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusConflict)
 		return
 	}
 	handler.render(w, handler.tmpl, &serviceAccountCreatePostHandlerResponse{Success: true, Name: name})
