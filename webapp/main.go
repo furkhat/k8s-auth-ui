@@ -42,6 +42,7 @@ func main() {
 	serviceAccountsClient := k8s_client.NewServiceAccountsClient(clientset)
 	rolesClient := k8s_client.NewRolesClient(clientset)
 	clusterRolesClient := k8s_client.NewClusterRolesClient(clientset)
+	namespacesClient := k8s_client.NewNamespacesClient(clientset)
 	serviceAccountListHandler := handlers.NewServiceAccountsListHandler(
 		template.Must(
 			template.ParseFiles(
@@ -70,6 +71,7 @@ func main() {
 				filepath.Join(templatesDir, "serviceaccounts_create.html"),
 			),
 		),
+		namespacesClient,
 	)
 
 	router.Handle(

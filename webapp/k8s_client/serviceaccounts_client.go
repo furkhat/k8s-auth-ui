@@ -1,6 +1,8 @@
 package k8s_client
 
 import (
+	"errors"
+
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -26,11 +28,27 @@ func (client *ServiceAccountsClient) GetList() ([]apiv1.ServiceAccount, error) {
 	return serviceAccountsList.Items, nil
 }
 
-func (client *ServiceAccountsClient) Create(name string) (*apiv1.ServiceAccount, error) {
+type CreateServiceAccountSpec struct {
+	Name      string
+	Namespace string
+}
+
+func (spec *CreateServiceAccountSpec) validate() error {
+	if len(spec.Name) == 0 {
+		return errors.New("Name is required.")
+	}
+	if len(spec.Namespace) == 0 {
+		return errors.New("Namespace is required.")
+	}
+	return nil
+}
+
+func (client *ServiceAccountsClient) Create(spec *CreateServiceAccountSpec) (*apiv1.ServiceAccount, error) {
 	serviceAccount := &apiv1.ServiceAccount{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: name,
+			Name:      spec.Name,
+			Namespace: spec.Namespace,
 		},
 	}
-	return client.clientset.CoreV1().ServiceAccounts(apiv1.NamespaceDefault).Create(serviceAccount)
+	return client.clientset.CoreV1().ServiceAccounts(spec.Namespace).Create(serviceAccount)
 }
