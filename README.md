@@ -1,11 +1,14 @@
 # Application overview
 
-Features:
+## Features
+
   * Create ServiceAccounts
   * View ServiceAccounts
   * View RoleBindings for particular ServiceAccount
   * View ClusterRoles
   * View Roles
+  
+![Demo](https://github.com/furkhat/k8s-auth-ui/blob/master/files/demo.gif "Demo Demo Demo")
 
 # Run application
 
