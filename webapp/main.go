@@ -4,139 +4,63 @@ import (
 	"net/http"
 
 	"github.com/furkhat/k8s-users/webapp/handlers"
-	"github.com/furkhat/k8s-users/webapp/k8s_client"
 	"github.com/gorilla/mux"
-	"html/template"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
-	"log"
-	"os"
-	"path/filepath"
+	"github.com/furkhat/k8s-users/webapp/application"
 )
 
-func makeClientSet(kubeConfigPath string) (*kubernetes.Clientset, error) {
-	config, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
-	if err != nil {
-		return nil, err
-	}
-	return kubernetes.NewForConfig(config)
-}
-
 func main() {
-	workingDir, err := os.Getwd()
-	if err != nil {
-		log.Panic(err.Error())
-	}
-	templatesDir := filepath.Join(workingDir, "webapp", "templates")
-
-	kubeConfigPath := os.Getenv("KUBE_CONFIG")
-	if kubeConfigPath == "" {
-		log.Fatal("KUBE_CONFIG evironment variable must be set")
-	}
-
-	clientset, err := makeClientSet(kubeConfigPath)
-	if err != nil {
-		log.Panic(err.Error())
-	}
-
-	serviceAccountsClient := k8s_client.NewServiceAccountsClient(clientset)
-	rolesClient := k8s_client.NewRolesClient(clientset)
-	clusterRolesClient := k8s_client.NewClusterRolesClient(clientset)
-	namespacesClient := k8s_client.NewNamespacesClient(clientset)
-	rolebindingsClient := k8s_client.NewRoleBindingsClient(clientset)
-
-	serviceAccountListHandler := handlers.NewServiceAccountsListHandler(
-		template.Must(
-			template.ParseFiles(
-				filepath.Join(templatesDir, "base.html"),
-				filepath.Join(templatesDir, "serviceaccounts_list.html"),
-			),
-		),
-		serviceAccountsClient,
+	var (
+		appConfig = application.NewAppConfig()
+		app       = application.NewApplication(appConfig)
+		router    = mux.NewRouter()
 	)
 
-	router := mux.NewRouter()
-
-	router.Handle(
-		"/",
-		serviceAccountListHandler,
-	).Methods("GET")
-	router.Handle(
-		"/serviceaccounts",
-		serviceAccountListHandler,
-	).Methods("GET")
-
-	serviceAccountCreateGetHandler := handlers.NewServiceAccountCreateGetHandler(
-		template.Must(
-			template.ParseFiles(
-				filepath.Join(templatesDir, "base.html"),
-				filepath.Join(templatesDir, "serviceaccounts_create.html"),
-			),
-		),
-		namespacesClient,
+	serviceAccountsListHandler := handlers.NewServiceAccountsListHandler(
+		app.TemplateBuilder.Build("serviceaccounts_list"),
+		app.ServiceAccountsClient,
 	)
+	router.Handle("/", serviceAccountsListHandler).Methods("GET")
+	router.Handle("/serviceaccounts", serviceAccountsListHandler).Methods("GET")
 
 	router.Handle(
 		"/serviceaccounts/create",
-		serviceAccountCreateGetHandler,
-	).Methods("GET")
-
-	serviceAccountCreatePostHandler := handlers.NewServiceAccountCreatePostHandler(
-		template.Must(
-			template.ParseFiles(
-				filepath.Join(templatesDir, "base.html"),
-				filepath.Join(templatesDir, "serviceaccounts_create.html"),
-			),
+		handlers.NewServiceAccountCreateGetHandler(
+			app.TemplateBuilder.Build("serviceaccounts_create"),
+			app.NamespacesClient,
 		),
-		serviceAccountsClient,
-	)
+	).Methods("GET")
 
 	router.Handle(
 		"/serviceaccounts/create",
-		serviceAccountCreatePostHandler,
+		handlers.NewServiceAccountCreatePostHandler(
+			app.TemplateBuilder.Build("serviceaccounts_create"),
+			app.ServiceAccountsClient,
+		),
 	).Methods("POST")
 
-	serviceAccountDetailsHandler := handlers.NewServiceAccountDetailsHandler(
-		template.Must(
-			template.ParseFiles(
-				filepath.Join(templatesDir, "base.html"),
-				filepath.Join(templatesDir, "serviceaccounts_details.html"),
-			),
-		),
-		rolebindingsClient,
-		serviceAccountsClient,
-	)
 	router.Handle(
 		"/serviceaccounts/{namespace}/{name}",
-		serviceAccountDetailsHandler,
-	)
-
-	rolesListHandler := handlers.NewRolesListHandler(
-		template.Must(
-			template.ParseFiles(
-				filepath.Join(templatesDir, "base.html"),
-				filepath.Join(templatesDir, "roles_list.html"),
-			),
+		handlers.NewServiceAccountDetailsHandler(
+			app.TemplateBuilder.Build("serviceaccounts_details"),
+			app.RoleBindingsClient,
+			app.ServiceAccountsClient,
 		),
-		rolesClient,
-	)
-	router.Handle(
-		"/roles",
-		rolesListHandler,
 	).Methods("GET")
 
-	clusterRolesListHandler := handlers.NewClusterRolesListHandler(
-		template.Must(
-			template.ParseFiles(
-				filepath.Join(templatesDir, "base.html"),
-				filepath.Join(templatesDir, "clusterroles_list.html"),
-			),
+	router.Handle(
+		"/roles",
+		handlers.NewRolesListHandler(
+			app.TemplateBuilder.Build("roles_list"),
+			app.RolesClient,
 		),
-		clusterRolesClient,
-	)
+	).Methods("GET")
+
 	router.Handle(
 		"/clusterroles",
-		clusterRolesListHandler,
+		handlers.NewClusterRolesListHandler(
+			app.TemplateBuilder.Build("clusterroles_list"),
+			app.ClusterRolesClient,
+		),
 	).Methods("GET")
 
 	http.ListenAndServe(":8080", router)
